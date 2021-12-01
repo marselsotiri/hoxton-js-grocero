@@ -35,7 +35,7 @@ const state = {
         },
         {
             id: 7,
-            name: "bell pepper",
+            name: "bell-pepper",
             price: 0.25
         },
         {
@@ -65,6 +65,7 @@ const state = {
   <button>Add to cart</button>
 </li> */
 
+for (const grociere of state.groceries) {
 
 const liStore = document.createElement('li')
 
@@ -72,8 +73,8 @@ const divStore = document.createElement('div')
 divStore.setAttribute('class', 'store--item-icon')
 
 const imgStore = document.createElement('img')
-      imgStore.setAttribute('src', "assets/icons/001-beetroot.svg")
-      imgStore.setAttribute('alt', 'beetroot')
+      imgStore.setAttribute('src', `assets/icons/${grociere.id}-${grociere.name}.svg`)
+      imgStore.setAttribute('alt', grociere.name)
 divStore.append(imgStore)
 
 const buttonStore = document.createElement('button')
@@ -82,7 +83,7 @@ const buttonStore = document.createElement('button')
 liStore.append(divStore, buttonStore)
 
 storeItemList.append(liStore)
-
+}
 
 
 /* <li>
@@ -97,14 +98,14 @@ storeItemList.append(liStore)
   <button class="quantity-btn add-btn center">+</button>
 </li> */
 
-
+for (const grociere of state.groceries) {
 
 const liCart = document.createElement('li')
 
 const imgCart = document.createElement('img')
       imgCart.setAttribute('class', 'cart--item-icon')
-      imgCart.setAttribute('src', "assets/icons/001-beetroot.svg")
-      imgCart.setAttribute('alt', 'beetroot')
+      imgCart.setAttribute('src', `assets/icons/${grociere.id}-${grociere.name}.svg`)
+      imgCart.setAttribute('alt', grociere.name)
 
 const pCart = document.createElement('p')
 
@@ -123,5 +124,7 @@ const buttonCartAdd = document.createElement('button')
 liCart.append(imgCart, pCart, buttonCartremove, spanCart, buttonCartAdd)
 
 cartItemList.append(liCart)
+
+}
 
 console.log('Hello');
