@@ -61,15 +61,37 @@ const state = {
 
 
 function addGrociere(grociere) {
-    const grocieres = {
-        id: grociere.id,
-        name: grociere.name,
-        price: grociere.price,
-        count: 1
-    }
+    const match = state.cart.find(function (item) {
+        return item.name === grociere.name
+    })
 
-    state.cart.push(grocieres)
+    if (match) {
+        match.count++
+    }else{
+        const grocieres = {
+            id: grociere.id,
+            name: grociere.name,
+            price: grociere.price,
+            count: 1
+        }
+    
+        state.cart.push(grocieres)
+    }
+    
 }
+
+function removeCartItem(cartItem) {
+    
+    cartItem.count--
+
+    if (cartItem.count===0){
+      const updatedCart = state.cart.filter(function (item){
+            return item.id !== cartItem.id
+        })
+        state.cart=updatedCart
+    }
+}
+
 function totalPrice() {
     let totalAmount = 0
     for (const cart of state.cart) {
@@ -155,17 +177,15 @@ function renderCartItems() {
 
         const buttonAdd = liCart.querySelector('button.quantity-btn.add-btn.center')
         buttonAdd.addEventListener('click', function () {
-            grociere.count += 1
+            addGrociere(grociere)
             render()
         })
 
         const buttonRemove = liCart.querySelector('button.quantity-btn.remove-btn.center')
         buttonRemove.addEventListener('click', function () {
-            grociere.count -= 1
+            removeCartItem(grociere)
             render()
         })
-
-        totalPrice()
 
         cartItemList.append(liCart)
 
@@ -176,6 +196,7 @@ function renderCartItems() {
 function render() {
     renderCartItems()
     renderStoreItems()
+    totalPrice()
 }
 
 
