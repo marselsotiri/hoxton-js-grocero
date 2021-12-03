@@ -1,5 +1,6 @@
 const cartItemList = document.querySelector('.item-list.cart--item-list')
 const storeItemList = document.querySelector('.item-list.store--item-list')
+const totalAmountPrice = document.querySelector('.total-number')
 
 const state = {
     groceries: [
@@ -54,9 +55,28 @@ const state = {
             price: 0.65
         }
 
-    ]
+    ],
+    cart: []
 }
 
+
+function addGrociere(grociere) {
+    const grocieres = {
+        id: grociere.id,
+        name: grociere.name,
+        price: grociere.price,
+        count: 1
+    }
+
+    state.cart.push(grocieres)
+}
+function totalPrice() {
+    let totalAmount = 0
+    for (const cart of state.cart) {
+        totalAmount += cart.count * cart.price
+    }
+    totalAmountPrice.textContent = totalAmount.toFixed(2)
+}
 
 /* <li>
   <div class="store--item-icon">
@@ -64,27 +84,36 @@ const state = {
   </div>
   <button>Add to cart</button>
 </li> */
+function renderStoreItems() {
+    storeItemList.innerHTML = ''
 
-for (const grociere of state.groceries) {
+    for (const grociere of state.groceries) {
+        const liStore = document.createElement('li')
 
-const liStore = document.createElement('li')
+        const divStore = document.createElement('div')
+        divStore.setAttribute('class', 'store--item-icon')
 
-const divStore = document.createElement('div')
-divStore.setAttribute('class', 'store--item-icon')
+        const imgStore = document.createElement('img')
+        imgStore.setAttribute('src', `assets/icons/${grociere.id}-${grociere.name}.svg`)
+        imgStore.setAttribute('alt', grociere.name)
+        divStore.append(imgStore)
 
-const imgStore = document.createElement('img')
-      imgStore.setAttribute('src', `assets/icons/${grociere.id}-${grociere.name}.svg`)
-      imgStore.setAttribute('alt', grociere.name)
-divStore.append(imgStore)
+        const buttonStore = document.createElement('button')
+        buttonStore.textContent = 'Add to Cart'
 
-const buttonStore = document.createElement('button')
-      buttonStore.textContent = 'Add to Cart'
 
-liStore.append(divStore, buttonStore)
+        liStore.append(divStore, buttonStore)
 
-storeItemList.append(liStore)
+        const buttonAdd = liStore.querySelector('button')
+        buttonAdd.addEventListener('click', function () {
+            addGrociere(grociere)
+
+            render()
+        })
+
+        storeItemList.append(liStore)
+    }
 }
-
 
 /* <li>
   <img
@@ -97,34 +126,63 @@ storeItemList.append(liStore)
   <span class="quantity-text center">1</span>
   <button class="quantity-btn add-btn center">+</button>
 </li> */
+function renderCartItems() {
+    cartItemList.innerHTML = ''
+    for (const grociere of state.cart) {
 
-for (const grociere of state.groceries) {
+        const liCart = document.createElement('li')
 
-const liCart = document.createElement('li')
+        const imgCart = document.createElement('img')
+        imgCart.setAttribute('class', 'cart--item-icon')
+        imgCart.setAttribute('src', `assets/icons/${grociere.id}-${grociere.name}.svg`)
+        imgCart.setAttribute('alt', grociere.name)
 
-const imgCart = document.createElement('img')
-      imgCart.setAttribute('class', 'cart--item-icon')
-      imgCart.setAttribute('src', `assets/icons/${grociere.id}-${grociere.name}.svg`)
-      imgCart.setAttribute('alt', grociere.name)
+        const pCart = document.createElement('p')
 
-const pCart = document.createElement('p')
+        const buttonCartremove = document.createElement('button')
+        buttonCartremove.setAttribute('class', 'quantity-btn remove-btn center')
+        buttonCartremove.textContent = '-'
 
-const buttonCartremove = document.createElement('button')
-      buttonCartremove.setAttribute('class', 'quantity-btn remove-btn center')
-      buttonCartremove.textContent = '-'
+        const spanCart = document.createElement('span')
+        spanCart.setAttribute('class', 'quantity-text center')
+        spanCart.textContent = grociere.count
 
-const spanCart = document.createElement('span')
-      spanCart.setAttribute('class', 'quantity-text center')
-      spanCart.textContent = 1
+        const buttonCartAdd = document.createElement('button')
+        buttonCartAdd.setAttribute('class', 'quantity-btn add-btn center')
+        buttonCartAdd.textContent = '+'
 
-const buttonCartAdd = document.createElement('button')
-      buttonCartAdd.setAttribute('class', 'quantity-btn remove-btn center')
-      buttonCartAdd.textContent = '+'
+        liCart.append(imgCart, pCart, buttonCartremove, spanCart, buttonCartAdd)
 
-liCart.append(imgCart, pCart, buttonCartremove, spanCart, buttonCartAdd)
+        const buttonAdd = liCart.querySelector('button.quantity-btn.add-btn.center')
+        buttonAdd.addEventListener('click', function () {
+            grociere.count += 1
+            render()
+        })
 
-cartItemList.append(liCart)
+        const buttonRemove = liCart.querySelector('button.quantity-btn.remove-btn.center')
+        buttonRemove.addEventListener('click', function () {
+            grociere.count -= 1
+            render()
+        })
+
+        totalPrice()
+
+        cartItemList.append(liCart)
+
+    }
 
 }
 
-console.log('Hello');
+function render() {
+    renderCartItems()
+    renderStoreItems()
+}
+
+
+render()
+
+
+console.log(state);
+
+
+
