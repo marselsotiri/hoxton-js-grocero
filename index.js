@@ -75,7 +75,7 @@ function totalPrice() {
     for (const cart of state.cart) {
         totalAmount += cart.count * cart.price
     }
-    totalAmountPrice.textContent = totalAmount.toFixed(2)
+    totalAmountPrice.textContent = `£${totalAmount.toFixed(2)}`
 }
 
 /* <li>
